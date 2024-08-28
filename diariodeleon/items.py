@@ -12,13 +12,16 @@ class DiariodeleonItem(scrapy.Item):
     updated_date = scrapy.Field()
     author = scrapy.Field()
     location = scrapy.Field()
-    tags = scrapy.Field()
+    keywords = scrapy.Field()
     content = scrapy.Field()
-    images = scrapy.Field()
-    image_caption = scrapy.Field()
-    image_author = scrapy.Field()
+    image = scrapy.Field()
+
     category = scrapy.Field()  # New field for category
 
+def split_by_comma(value):
+    if value:
+        return [item.strip() for item in value.split(',')]
+    return []
 
 class DiariodeleonItemLoader(scrapy.loader.ItemLoader):
     default_output_processor = TakeFirst()
@@ -26,8 +29,8 @@ class DiariodeleonItemLoader(scrapy.loader.ItemLoader):
     # Processors for specific fields
     content_in = MapCompose(str.strip)  # Remove leading/trailing spaces from content
     content_out = Join('\n')  # Join paragraphs with a newline
-    tags_out = MapCompose(str.strip)  # Strip whitespace from each tag
-    images_out = MapCompose(str.strip)  # Strip whitespace from each tag
+
+    keywords_out = MapCompose(split_by_comma)  # Strip whitespace from each tag
 
     # Publication date processor to clean up the date format
     publication_date_in = MapCompose(lambda x: re.sub(r'\s*\|\s*', ' ', x))
