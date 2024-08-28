@@ -4,6 +4,7 @@ import re
 
 
 class DiariodeleonItem(scrapy.Item):
+    url = scrapy.Field()
     title = scrapy.Field()
     subtitle = scrapy.Field()
     category = scrapy.Field()
@@ -26,7 +27,7 @@ class DiariodeleonItemLoader(scrapy.loader.ItemLoader):
     content_in = MapCompose(str.strip)  # Remove leading/trailing spaces from content
     content_out = Join('\n')  # Join paragraphs with a newline
     tags_out = MapCompose(str.strip)  # Strip whitespace from each tag
-    images_out = MapCompose(lambda v: {'url': v.get('url'), 'caption': v.get('caption')})
+    images_out = MapCompose(str.strip)  # Strip whitespace from each tag
 
     # Publication date processor to clean up the date format
     publication_date_in = MapCompose(lambda x: re.sub(r'\s*\|\s*', ' ', x))
