@@ -65,9 +65,10 @@ DOWNLOAD_TIMEOUT = 60
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "diariodeleon.pipelines.DiariodeleonPipeline": 300,
-#}
+ITEM_PIPELINES = {
+    "diariodeleon.pipelines.DiariodeleonPipeline": 300,
+    "diariodeleon.pipelines.JsonWriterPipeline": 301,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
