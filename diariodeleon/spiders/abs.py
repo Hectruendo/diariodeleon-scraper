@@ -1,4 +1,5 @@
 import logging
+import time
 
 from scrapy.http import Request
 from scrapy.spiders import SitemapSpider
@@ -44,6 +45,12 @@ class CustomSitemapSpider(SitemapSpider):
                     loc = entry.get("loc")
                     lastmod = entry.get("lastmod")
                     if loc:
+                        # last mode has format: 2018-05-01T06:00:01+02:00, convert it to timestamp for sorting later as such: self._url_list.sort(key=lambda x: x[1], reverse=True)
+                        if lastmod:
+                            lastmod = time.mktime(time.strptime(lastmod, "%Y-%m-%dT%H:%M:%S%z"))
+                        else:
+                            lastmod = 0
+
                         self._url_list.append((loc, lastmod))
 
             # Decrement pending sitemap request counter
