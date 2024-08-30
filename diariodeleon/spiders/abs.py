@@ -27,8 +27,8 @@ class CustomSitemapSpider(SitemapSpider):
                     {"response": response},
                     extra={"spider": self},
                 )
-                self._check_sitemap_completion()
-                return
+                for r in self._check_sitemap_completion():
+                    yield r
 
             s = Sitemap(body)
             it = self.sitemap_filter(s)
@@ -47,11 +47,17 @@ class CustomSitemapSpider(SitemapSpider):
                         self._url_list.append((loc, lastmod))
 
             # Decrement pending sitemap request counter
-            self._check_sitemap_completion()
+            for r in self._check_sitemap_completion():
+                yield r
 
     def _check_sitemap_completion(self):
         """Check if all sitemapindex requests have been processed, and if so, process the URL set."""
         self._pending_sitemap_requests -= 1
+        logger.info(
+            "Pending sitemap requests: %(pending)s",
+            {"pending": self._pending_sitemap_requests},
+            extra={"spider": self},
+        )
         if self._pending_sitemap_requests == 0:
             # Sort the URL list by lastmod in descending order and yield requests
             self._url_list.sort(key=lambda x: x[1], reverse=True)
