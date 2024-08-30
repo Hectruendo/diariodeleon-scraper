@@ -1,11 +1,8 @@
-import scrapy
-from scrapy.loader.processors import Join
-from scrapy.spiders import SitemapSpider
-
 from diariodeleon.items import DiariodeleonItem, DiariodeleonItemLoader
+from diariodeleon.spiders.abs import CustomSitemapSpider
 
 
-class DiariodeleonSpider(SitemapSpider):
+class DiariodeleonSpider(CustomSitemapSpider):
     name = 'diariodeleon'
     allowed_domains = ['diariodeleon.es']
     sitemap_urls = ['https://www.diariodeleon.es/sitemap-index.xml']
