@@ -52,8 +52,10 @@ CONCURRENT_REQUESTS_PER_IP = 16
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
 #    "diariodeleon.middlewares.DiariodeleonDownloaderMiddleware": 543,
-     "scrapy.downloadermiddlewares.httpcache.HttpCacheMiddleware": 543,
-     "scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware": 545,
+    "scrapy.downloadermiddlewares.httpcache.HttpCacheMiddleware": 543,
+    "rotating_proxies.middlewares.RotatingProxyMiddleware": 610,
+    "rotating_proxies.middlewares.BanDetectionMiddleware": 620,
+    "scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware": 630,
 }
 DOWNLOAD_TIMEOUT = 60
 
@@ -95,3 +97,8 @@ HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+
+
+ROTATING_PROXY_LIST = [
+    '85.117.63.37:8080',
+]
