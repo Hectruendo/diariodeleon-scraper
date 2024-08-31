@@ -11,8 +11,7 @@ class DiariodeleonPipeline:
 
 class JsonWriterPipeline:
     def open_spider(self, spider):
-        # Get the current date in YYYYMMDD format
-        date_str = datetime.now().strftime("%Y%m%d")
+        date_str = datetime.now().strftime("%Y%m%d%H%M%S")
         # Create the file name with the date
         file_name = f"results/items_{date_str}.jsonl"
         # Open the file for writing

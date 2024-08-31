@@ -1,5 +1,7 @@
 import logging
 import time
+from scrapy import signals
+from datetime import datetime
 
 from scrapy.http import Request
 from scrapy.spiders import SitemapSpider
@@ -14,6 +16,16 @@ class CustomSitemapSpider(SitemapSpider):
         super().__init__(*a, **kw)
         self._url_list = []
         self._pending_sitemap_requests = 0
+
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        # Create the spider instance
+        spider = super(CustomSitemapSpider, cls).from_crawler(crawler, *args, **kwargs)
+
+        # Connect the signal
+        crawler.signals.connect(spider.log_error, signal=signals.spider_error)
+
+        return spider
 
     def _parse_sitemap(self, response):
         if response.url.endswith("/robots.txt"):
@@ -68,8 +80,33 @@ class CustomSitemapSpider(SitemapSpider):
         if self._pending_sitemap_requests == 0:
             # Sort the URL list by lastmod in descending order and yield requests
             self._url_list.sort(key=lambda x: x[1], reverse=True)
+            logger.info(
+                f"Sitemap index processed, sorting URLs by lastmod and yielding requests, total URLs: {len(self._url_list)}",
+                extra={"spider": self}
+            )
+            logger.info(
+                f"First date: {datetime.fromtimestamp(self._url_list[-1][1])}, Last date: {datetime.fromtimestamp(self._url_list[0][1])}",
+                extra={"spider": self}
+            )
             for loc, _ in self._url_list:
                 for r, c in self._cbs:
                     if r.search(loc):
-                        yield Request(loc, callback=c)
+                        yield Request(
+                            loc,
+                            callback=c,
+                            # errback=self.log_error,
+                            # meta={'handle_httpstatus_all': True}
+                        )
                         break
+
+    def log_error(self, failure):
+        # Extract the URL from the failure object
+        request = failure.request
+        url = request.url
+
+        # Get the current date in YYYYMMDD format
+        date_str = datetime.now().strftime("%Y%m%d%H%M%S")
+
+        # Log the URL to a file with the date in its name
+        with open(f'results/failed_urls_{date_str}.txt', 'a') as f:
+            f.write(url + '\n')

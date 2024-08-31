@@ -44,9 +44,10 @@ CONCURRENT_REQUESTS_PER_IP = 16
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    "diariodeleon.middlewares.DiariodeleonSpiderMiddleware": 543,
-#}
+SPIDER_MIDDLEWARES = {
+    # "diariodeleon.middlewares.DiariodeleonSpiderMiddleware": 543,
+    "scrapy.spidermiddlewares.httperror.HttpErrorMiddleware": 50,
+}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
