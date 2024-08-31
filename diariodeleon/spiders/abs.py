@@ -16,6 +16,7 @@ class CustomSitemapSpider(SitemapSpider):
         super().__init__(*a, **kw)
         self._url_list = []
         self._pending_sitemap_requests = 0
+        self.total_urls = 0
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
@@ -88,12 +89,14 @@ class CustomSitemapSpider(SitemapSpider):
                 f"First date: {datetime.fromtimestamp(self._url_list[-1][1])}, Last date: {datetime.fromtimestamp(self._url_list[0][1])}",
                 extra={"spider": self}
             )
-            for loc, _ in self._url_list:
+            self.total_urls = len(self._url_list)
+            for index, (loc, _) in enumerate(self._url_list):
                 for r, c in self._cbs:
                     if r.search(loc):
                         yield Request(
                             loc,
                             callback=c,
+                            priority=self.total_urls - index,
                             # errback=self.log_error,
                             # meta={'handle_httpstatus_all': True}
                         )
