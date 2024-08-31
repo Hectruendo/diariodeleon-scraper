@@ -42,7 +42,7 @@ CONCURRENT_REQUESTS_PER_IP = 16
 #    "Accept-Language": "en",
 #}
 
-# Enable or disable spider middlewares
+# Enable or disable spidefr middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 SPIDER_MIDDLEWARES = {
     # "diariodeleon.middlewares.DiariodeleonSpiderMiddleware": 543,
@@ -91,7 +91,48 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 1
 HTTPCACHE_ENABLED = True
 HTTPCACHE_EXPIRATION_SECS = 0
 HTTPCACHE_DIR = "httpcache"
-HTTPCACHE_IGNORE_HTTP_CODES = []
+HTTPCACHE_IGNORE_HTTP_CODES = [
+    400,
+    401,
+    402,
+    403,
+    404,
+    405,
+    406,
+    407,
+    408,
+    409,
+    410,
+    411,
+    412,
+    413,
+    414,
+    415,
+    416,
+    417,
+    418,
+    421,
+    422,
+    423,
+    424,
+    425,
+    426,
+    428,
+    429,
+    431,
+    451,
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    510,
+    511
+]
 HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
 
 # Set settings whose default value is deprecated to a future-proof value
@@ -102,4 +143,5 @@ FEED_EXPORT_ENCODING = "utf-8"
 
 ROTATING_PROXY_LIST = [
     '85.117.63.37:8080',
+    # "31.200.242.201:12196",
 ]
