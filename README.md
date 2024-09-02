@@ -18,9 +18,11 @@ Run the scraper with the following command:
 scrapy crawl diariodeleon
 ```
 
-It is using the HttpCacheMiddleware to cache the requestss therefore if you stop the scraper it would not be a big deal: the next time you run it, it will scrape all the previously scraped results very quickly because they will be stored in the cache avoiding making requests to diariodeleon.com
+__Cache__: It is using the HttpCacheMiddleware to cache the requestss therefore if you stop the scraper it would not be a big deal: the next time you run it, it will scrape all the previously scraped results very quickly because they will be stored in the cache avoiding making requests to diariodeleon.com
 
-It is using a very polite scraping policy, you dont have to worry about being blocked.
+__Policy__: It is using a very polite scraping policy, you dont have to worry about being blocked.
+
+__Proxies__: In case of desiring to use proxies, you can set them in the __settings.py__ file inside the ROTATING_PROXY_LIST variable.
 
 ## Results
 
