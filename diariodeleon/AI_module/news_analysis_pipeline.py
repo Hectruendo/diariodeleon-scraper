@@ -1,4 +1,3 @@
-
 import json
 import os
 
@@ -11,6 +10,12 @@ from utils import modify_text_for_llm
 
 from dotenv import load_dotenv
 load_dotenv() 
+
+article_limit = 5000
+years = [2024]
+
+
+
 
 prompt = Prompt(SYSTEM_MESSAGE.strip(), USER_MESSAGE.strip())
 
@@ -34,8 +39,11 @@ if os.path.exists(file_path):
             json_results[article['url']] = article
 counter = 0
 for article in tqdm(data):
+    if 'publication_date' not in article or int(article['publication_date'][:4]) not in years:
+        print("Article is not from the specified year, skipping...")
+        continue
     counter += 1
-    if counter > 5000:
+    if counter > article_limit:
         break
     
     if article['url'] in json_results:
