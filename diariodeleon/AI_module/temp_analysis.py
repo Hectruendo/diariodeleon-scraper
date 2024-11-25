@@ -33,3 +33,15 @@ for i in year:
         count_per_year[i] += 1
     else:
         count_per_year[i] = 1
+
+category_counts = {}
+for article in data:
+    if 'category' not in article:
+        continue
+    print(article['title'])
+    category = article['category']
+    if category in category_counts:
+        category_counts[category] += 1
+    else:
+        category_counts[category] = 1
+    

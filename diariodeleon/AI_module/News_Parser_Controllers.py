@@ -94,5 +94,7 @@ class OpenAIAPI():
             response = self.client.chat.completions.create(model=self.model, messages=messages,response_format=response_format)
             return response.choices[0].message.content.strip()
         except Exception as e:
+            
             print(f"Error extracting attributes: {e}")
-            return None  
+            raise e
+          
