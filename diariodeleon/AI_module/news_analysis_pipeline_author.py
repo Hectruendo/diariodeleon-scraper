@@ -111,7 +111,8 @@ authors = [
     "Maria Jesús Muñiz",
     "Carmen Tapia",
     "Ana Gil",
-    "Miguel Angel Zamora"
+    "Miguel Angel Zamora",
+    "Ana Gaitero",
 ]
 
 #create a counter of authors based on results_counter

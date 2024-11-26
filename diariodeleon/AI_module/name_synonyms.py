@@ -73,9 +73,6 @@ SYNONYMS = {
         'Bouza Pol',
         'Bouza Pol  Escritor'
     ],
-    'C. B.': [
-        'C. B.'
-    ],
     'Carlos Fidalgo': [
         'C. FIDALGO',
         'C. Fidalgo',
@@ -314,12 +311,6 @@ SYNONYMS = {
         'melchor saiz pardo',
         'melchor sáiz-pardo'
     ],
-    'Miguel Ángel Zamora': [
-        'M.Á. Z',
-        'M.Á.Z.',
-        'MIGUEL Á. ZAMORA',
-        'Miguel Ángel Zamora'
-    ],
     'Paco Aguado': [
         'Paco Aguado'
     ],
@@ -424,24 +415,14 @@ SYNONYMS = {
         'm. rabanillo',
         'M.Rabanillo'
     ],
-       'Maria Jesús Muñiz': [
-        'María Jesús Muñiz',
-        'maría j. muñiz',
-        'María J. Muñiz',
-        'M. J. MUÑIZ',
-        'M. J. M.',
-        'm. j. m.',
-        'm. j. muñiz',
-        'María J.Muñiz',
-        'Nubes y clarosMaría J. Muñiz',
-        'M.J.Muñiz'
-    ],
      'Miguel Angel Zamora': [
         'Miguel Ángel Zamora',
         'M.Á.Z.',
         'M.Á.ZAMORA./A.CABALLERO',
         'M.Á.ZAMORA./A. CABALLERO',
-        'M.Á. Z'
+        'M.Á. Z',    
+        'MIGUEL Á. ZAMORA',
+        'Miguel Angel Zamora'
     ],
 
 }
