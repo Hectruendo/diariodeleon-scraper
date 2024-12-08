@@ -21,7 +21,7 @@ prompt = Prompt(SYSTEM_MESSAGE.strip(), USER_MESSAGE.strip())
 news_parser = NewsParser(os.environ.get("OPENAI_API_KEY"), prompt = prompt)
 
 
-path = '/home/adrian.alvarez/Projects/diariodeleon-scraper/results/resultados_recientes.jsonl'
+path = '/home/panchojasen/Projects/diariodeleon-scraper/results/resultados_recientes.jsonl'
 with open(path) as f:
     data = f.readlines()
 # give a python dict
@@ -108,6 +108,7 @@ for article in tqdm(data):
     if article['category'] in results_counter and results_counter[article['category']] > 1000:
         print("Category already has 1500 articles, skipping...")
         continue
+    print(article.keys())
     
     article_body = article['content']
     article_title = article['title']
