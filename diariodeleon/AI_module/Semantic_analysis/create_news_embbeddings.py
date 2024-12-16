@@ -40,6 +40,13 @@ with open(output_path, "r") as in_f:
     for line in in_f:
         if line.strip():  # Ensure to skip empty lines
             noticias_list.append(json.loads(line.strip()))
-            break
+            
+#Get all keywords of all news as a set
+keywords_set = set()
+for noticia in noticias_list:
+    keywords_set.update(noticia["keywords_openai"])
 
+print(keywords_set)
+    
+    
 noticias_list[0]

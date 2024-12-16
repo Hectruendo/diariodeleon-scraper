@@ -6,13 +6,12 @@ from utils import transform_keys
 USERNAME = "panchojasen"
 
 
-path = f"/home/{USERNAME}/Projects/diariodeleon-scraper/results/resultados_recientes.jsonl"
+path = f"/home/{USERNAME}/Projects/diariodeleon-scraper/results/resultados_antiguos.jsonl"
 
 output_path = (
-    f"/home/{USERNAME}/Projects/diariodeleon-scraper/results/embeddings/resultados_recientes_embeddings.jsonl"
+    f"/home/{USERNAME}/Projects/diariodeleon-scraper/results/embeddings/resultados_antiguos_embeddings.jsonl"
 )
 
-# Embedder = SpanishTextEmbedder(device="cuda")
 
 with open(path) as f:
     data = f.readlines()
