@@ -22,7 +22,9 @@ data = [json.loads(line) for line in data]
 
 with open(output_path, "w") as out_f:
 
-    for result in tqdm(data):
+    for n,result in enumerate(tqdm(data)):
+        # if n < 1550:
+        #     continue
         result = transform_keys(result)
 
         noticia = Noticia(**result)
@@ -31,3 +33,13 @@ with open(output_path, "w") as out_f:
         out_f.write(json.dumps(noticia_dict) + "\n")
         
 
+noticias_list = []
+
+# Read the file and load each line as a dictionary
+with open(output_path, "r") as in_f:
+    for line in in_f:
+        if line.strip():  # Ensure to skip empty lines
+            noticias_list.append(json.loads(line.strip()))
+            break
+
+noticias_list[0]

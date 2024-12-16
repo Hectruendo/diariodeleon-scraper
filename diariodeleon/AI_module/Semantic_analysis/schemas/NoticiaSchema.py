@@ -39,80 +39,69 @@ class NoticiaBase(BaseModel):
     numero_sujetos_secundarios_femeninos: Optional[int] = None
     numero_sujetos_secundarios_masculinos: Optional[int] = None
 
-
 class NoticiaEmbeddings(NoticiaBase):
-    # Embeddings
+    embedding_model: ClassVar = SpanishTextEmbedder()
+    # Define which fields to embed, and whether they are single or multiple
+    fields_to_embed: ClassVar = {
+        "title": {"multiple": False, "enabled": True},
+        "subtitle": {"multiple": False, "enabled": True},
+        "keywords_diary": {"multiple": True, "enabled": True},
+        "keywords_openai": {"multiple": True, "enabled": True},
+        "population_groups": {"multiple": True, "enabled": True},
+    }
+    
     title_embedding: Optional[List[float]] = None
     subtitle_embedding: Optional[List[float]] = None
     content_embedding: Optional[List[float]] = None
     keywords_diary_embeddings: Optional[List[List[float]]] = None
     keywords_openai_embeddings: Optional[List[List[float]]] = None
     population_groups_embeddings: Optional[List[List[float]]] = None
-    # Embedding model
-    embedding_model: ClassVar = SpanishTextEmbedder()
 
     def calculate_embeddings(self):
-        """
-        Creates embeddings for title, subtitle, content, keywords_diary, keywords_openai,
-        and population_groups. All text fields are embedded at once, and then the results
-        are mapped back to their respective attributes.
-        """
-
         list_to_embed = []
-        # Mapping from field name to (start_index, end_index) in the `to_embed` list
         field_index_map = {}
 
-        # Single fields: title, subtitle, content
-        single_fields = [
-            ("title", self.title),
-            ("subtitle", self.subtitle),
-        ]
-
-        # List fields: keywords_diary, keywords_openai, population_groups
-        list_fields = [
-            ("keywords_diary", self.keywords_diary),
-            ("keywords_openai", self.keywords_openai),
-            ("population_groups", self.population_groups),
-        ]
-
-        # Collect single field texts
+        # Iterate over the configuration rather than hardcoding fields
         current_idx = 0
-        for fname, value in single_fields:
-            if value is not None and value.strip():
-                # Add the single text to the embedding list
-                list_to_embed.append(value.strip())
-                # Store the segment indices for later retrieval
-                field_index_map[fname] = (current_idx, current_idx + 1)
-                current_idx += 1
+        for field_name, config in self.fields_to_embed.items():
+            if not config["enabled"]:
+                continue  # Skip embedding this field entirely if disabled
 
-        # Collect list field texts
-        for fname, value_list in list_fields:
-            if value_list:
-                # Add all values in the list to the embedding list
-                cleaned = [v.strip() for v in value_list if v.strip()]
+            value = getattr(self, field_name, None)
+            if value is None:
+                continue  # If the field is None, skip embedding
+            
+            if config["multiple"] and isinstance(value, list):
+                # Clean and filter out empty entries
+                cleaned = [v.strip() for v in value if v and v.strip()]
                 if cleaned:
                     start = current_idx
                     list_to_embed.extend(cleaned)
                     end = current_idx + len(cleaned)
-                    field_index_map[fname] = (start, end)
+                    field_index_map[field_name] = (start, end)
                     current_idx = end
+            else:
+                # Single-field embedding
+                text = value.strip()
+                if text:
+                    list_to_embed.append(text)
+                    field_index_map[field_name] = (current_idx, current_idx + 1)
+                    current_idx += 1
 
-        # If there's nothing to embed, just return
         if not field_index_map:
-            return
+            return  # Nothing to embed
 
-        # Embed all texts at once
         embeddings = self.embedding_model.embed(list_to_embed)
         if isinstance(embeddings, np.ndarray):
             embeddings = embeddings.tolist()
-        single_field_names = [name for name, _ in single_fields]
-        # Distribute embeddings back to their respective fields
-        for fname, (start, end) in field_index_map.items():
+
+        # Assign embeddings back to the model fields
+        for field_name, (start, end) in field_index_map.items():
             segment = embeddings[start:end]
-            if fname in single_field_names:
-                setattr(self, f"{fname}_embedding", segment[0])
+            if self.fields_to_embed[field_name]["multiple"]:
+                setattr(self, f"{field_name}_embeddings", segment)
             else:
-                setattr(self, f"{fname}_embeddings", segment)
+                setattr(self, f"{field_name}_embedding", segment[0] if segment else None)
 
     def calculate_embeddings_main_content(self):
         if self.content:
